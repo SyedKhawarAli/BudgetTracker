@@ -90,8 +90,10 @@ struct MainContentView: View {
                             Text("$\(viewModel.totalBudget, specifier: "%.2f")")
                                 .font(.caption)
                         }
-                        ProgressView(value: (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget)
-                            .scaleEffect(x: 1, y: 2, anchor: .center)
+                        if (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget > 0 {
+                            ProgressView(value: (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget)
+                                .scaleEffect(x: 1, y: 2, anchor: .center)
+                        }
                         
                     }
                     .padding(.all, 4)

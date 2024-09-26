@@ -30,6 +30,7 @@ struct BudgetEntryDetailView: View {
                     }
                 }
             }
+            .cornerRadius(16)
             Spacer()
         }
         .padding()

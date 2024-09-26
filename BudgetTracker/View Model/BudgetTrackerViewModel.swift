@@ -56,41 +56,40 @@ class BudgetTrackerViewModel: ObservableObject {
 extension BudgetTrackerViewModel {
     // MARK: Public methods
     
-    func addEntry(amountText: String, descriptionText: String, selectedType: BudgetType?, completion: (() -> Void)?) {
+    private func validateEntryFields(amountText: String, descriptionText: String, selectedType: BudgetType?) -> BudgetEntry? {
         guard let amount = Double(amountText), amount > 0 else {
             error = Error.invalidAmount
-            return
+            return nil
         }
         guard (totalAmount + amount) <= totalBudget else {
             error = Error.outOfBudget
-            return
+            return nil
         }
         guard descriptionText.count <= Constants.maxDescriptionLength else {
             error = Error.budgetDescriptionTooLong
-            return
+            return nil
         }
         guard let type = selectedType else {
             error = Error.invalidAmount
-            return
+            return nil
         }
         let newEntry = BudgetEntry(id: UUID(), amount: amount, description: descriptionText, type: type)
-        entries.append(newEntry)
-        completion?()
+        return newEntry
+    }
+    
+    func addEntry(amountText: String, descriptionText: String, selectedType: BudgetType?, completion: (() -> Void)?) {
+        if let newEntry = validateEntryFields(amountText: amountText, descriptionText: descriptionText, selectedType: selectedType){
+            entries.append(newEntry)
+            completion?()
+        }
     }
     
     func updateEntry(entry: BudgetEntry, amountText: String, descriptionText: String, selectedType: BudgetType?, completion: (() -> Void)?){
-        guard let amount = Double(amountText), amount > 0 else {
-            error = Error.invalidAmount
-            return
-        }
-        guard let type = selectedType else {
-            error = Error.invalidAmount
-            return
-        }
+        guard let newEntry = validateEntryFields(amountText: amountText, descriptionText: descriptionText, selectedType: selectedType) else { return }
         if let index =  entries.firstIndex(where: { $0.id == entry.id }) {
-            entries[index].amount = amount
-            entries[index].description = descriptionText
-            entries[index].type = type
+            entries[index].amount = newEntry.amount
+            entries[index].description = newEntry.description
+            entries[index].type = newEntry.type
             completion?()
         }
     }

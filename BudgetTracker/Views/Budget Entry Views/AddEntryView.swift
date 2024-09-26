@@ -80,6 +80,7 @@ struct AddEntryView: View {
         ZStack {
             if viewModel.unusedTypes.count > 0 {
                 Picker("Type", selection: $selectedType) {
+                    Text("Select a Type").tag(BudgetType?.none)
                     ForEach(viewModel.unusedTypes) { type in
                         HStack {
                             Image(systemName: type.systemImage.lowercased())
@@ -102,7 +103,6 @@ struct AddEntryView: View {
                         .foregroundColor(.red)
                     Text("delete some types to add more")
                         .foregroundStyle(.secondary)
-
                 }
             }
         }

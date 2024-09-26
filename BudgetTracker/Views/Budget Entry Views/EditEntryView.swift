@@ -15,23 +15,39 @@ struct EditEntryView: View {
     @State private var amountText: String = ""
     @State private var descriptionText: String = ""
     @State private var selectedType: BudgetType?
+    
+    var totalAmountWithoutCurrentEntryAmount: Double {
+        return Double(viewModel.totalAmount - entry.amount)
+    }
 
     var body: some View {
         NavigationView {
-            Form {
-                TextField("Amount", text: $amountText)
-                    .keyboardType(.decimalPad)
-                TextField("Description", text: $descriptionText)
-                Picker("Type", selection: $selectedType) {
-                    ForEach(viewModel.availableTypes) { type in
+            VStack {
+                remainingBudgetView
+                    .padding(.horizontal)
+                    .padding(.top)
+                
+                Form {
+                    TextField("Amount", text: $amountText)
+                        .keyboardType(.decimalPad)
+                    TextField("Description", text: $descriptionText)
+                    Picker("Type", selection: $selectedType) {
                         HStack {
-                            Image(systemName: type.systemImage)
-                            Text(type.title)
-                        }.tag(type as BudgetType?)
+                            Image(systemName: entry.type.systemImage)
+                            Text(entry.type.title)
+                        }.tag(entry.type as BudgetType?)
+                        ForEach(viewModel.unusedTypes) { type in
+                            HStack {
+                                Image(systemName: type.systemImage)
+                                Text(type.title)
+                            }.tag(type as BudgetType?)
+                        }
                     }
                 }
             }
+            .background(Color(.systemGray6))
             .navigationTitle("Edit Entry")
+            .toolbarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             }, trailing: Button("Save") {
@@ -45,6 +61,38 @@ struct EditEntryView: View {
                 selectedType = entry.type
             }
             .errorAlert(error: $viewModel.error)
+        }
+    }
+    
+    private var remainingBudgetView: some View {
+        HStack {
+            VStack (alignment: .leading, spacing: 8){
+                HStack {
+                    Text("Remaining:")
+                        .font(.caption)
+                    Text("$\(viewModel.totalBudget - totalAmountWithoutCurrentEntryAmount , specifier: "%.2f")")
+                        .font(.caption)
+                    Spacer()
+                    Text("$\(viewModel.totalBudget, specifier: "%.2f")")
+                        .font(.caption)
+                }
+                ProgressView(value: (viewModel.totalBudget - totalAmountWithoutCurrentEntryAmount)/viewModel.totalBudget)
+                    .scaleEffect(x: 1, y: 2, anchor: .center)
+            }
+            .padding()
+            .background(Color(UIColor.systemBackground))
+            .cornerRadius(8)
+            if ((Double(amountText) ?? 0) + totalAmountWithoutCurrentEntryAmount) > viewModel.totalBudget {
+                Button {
+                    viewModel.totalBudget += 50
+                } label: {
+                    Text("+50")
+                        .padding(.all, 8)
+                }
+                .background(Color.accentColor)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+            }
         }
     }
 }
