@@ -13,6 +13,7 @@ class BudgetTrackerViewModel: ObservableObject {
         static let budgetEntries = "budgetEntries"
         static let budgetTypes = "budgetTypes"
         static let totalBudget = "totalBudget"
+        static let appTheme = "appTheme"
     }
     
     // MARK: Variables
@@ -34,6 +35,11 @@ class BudgetTrackerViewModel: ObservableObject {
             saveBudgetTypes()
         }
     }
+    @Published var appTheme: Theme = .light {
+        didSet {
+            saveAppTheme(appTheme)
+        }
+    }
     var unusedTypes: [BudgetType] {
         let usedTypes = entries.map { $0.type }
         return availableTypes.filter { !usedTypes.contains($0) }
@@ -48,6 +54,7 @@ class BudgetTrackerViewModel: ObservableObject {
         loadEntries()
         loadBudgetTypes()
         loadTotalBudget()
+        loadAppTheme()
     }
 }
 
@@ -187,6 +194,18 @@ extension BudgetTrackerViewModel {
         }
         totalBudget = amount
         completion?()
+    }
+}
+
+// MARK: - Theme setup
+
+extension BudgetTrackerViewModel {
+    func saveAppTheme(_ theme: Theme) {
+        UserDefaults.standard.set(theme.rawValue, forKey: BudgetKeys.appTheme)
+    }
+    
+    func loadAppTheme() {
+        appTheme = Theme(rawValue: UserDefaults.standard.string(forKey: BudgetKeys.appTheme) ?? Theme.system.rawValue) ?? .system
     }
 }
 

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MainContentView: View {
-    @State var totalBudget: Int = 0
     @ObservedObject var viewModel = BudgetTrackerViewModel()
     @State private var showingAddEntry = false
     @State private var isShowingSettings = false
@@ -56,6 +55,7 @@ struct MainContentView: View {
             }
             .padding()
             .navigationTitle("Budget Tracker")
+            .preferredColorScheme(colorScheme)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -81,6 +81,17 @@ struct MainContentView: View {
             }
             .navigationDestination(isPresented: $isShowingCardDetails) {
                 TotalBudgetDetailView(viewModel: viewModel)
+            }
+        }
+        
+        var colorScheme: ColorScheme? {
+            switch viewModel.appTheme {
+            case .light:
+                return .light
+            case .dark:
+                return .dark
+            case .system:
+                return nil
             }
         }
     }

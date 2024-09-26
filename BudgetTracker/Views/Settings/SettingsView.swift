@@ -26,6 +26,18 @@ struct SettingsView: View {
                     }
                 }
                 
+                Section(header: Text("Appearance")) {
+                    Picker("Theme", selection: $viewModel.appTheme) {
+                        ForEach(Theme.allCases) { theme in
+                            Text(theme.rawValue).tag(theme)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .onChange(of: viewModel.appTheme, { oldValue, newValue in
+                        viewModel.appTheme = newValue
+                    })
+                }
+                
                 Section(header: Text("App Information")) {
                     HStack {
                         Image(systemName: "info.circle")
@@ -58,4 +70,12 @@ struct SettingsView: View {
             }
         }
     }
+}
+
+enum Theme: String, CaseIterable, Identifiable {
+    case light = "Light"
+    case dark = "Dark"
+    case system = "System"
+    
+    var id: String { self.rawValue }
 }
