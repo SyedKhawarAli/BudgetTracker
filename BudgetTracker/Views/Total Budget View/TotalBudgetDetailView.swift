@@ -53,7 +53,6 @@ struct TotalBudgetDetailView: View {
         }
         .navigationTitle("Total Budget")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(viewModel.totalBudget <= 0)
         .errorAlert(error: $viewModel.error)
     }
 }

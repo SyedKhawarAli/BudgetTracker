@@ -16,41 +16,59 @@ struct MainContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                totalBudgetView
-                    .padding(.vertical, 8)
-                if !viewModel.entries.isEmpty {
-                    List {
-                        ForEach($viewModel.entries){ $entry in
-                            NavigationLink(destination: BudgetEntryDetailView(viewModel: viewModel, entry: $entry)) {
-                                HStack {
-                                    Image(systemName: entry.type.systemImage.lowercased())
-                                        .foregroundColor(.accentColor)
-                                    Text(entry.type.title)
-                                    Spacer()
-                                    Text("$\(entry.amount, specifier: "%.2f")")
-                                }
-                            }}
-                        .onDelete(perform: viewModel.removeEntry)
-                    }
-                    .background(
-                        Color(.systemGray6)
-                            .cornerRadius(8)
-                    )
-                    .scrollContentBackground(.hidden)
-                } else {
+                if viewModel.totalBudget <= 0 {
+                    Spacer()
                     Button {
-                        showingAddEntry = true
+                        isShowingCardDetails = true
                     } label: {
-                        Text("Add individual entries")
+                        Text("Set up your total budget")
                             .font(.headline)
-                            .padding()
                     }
+                    .frame(height: 96)
+                    .frame(maxWidth: .infinity)
                     .background(Color.accentColor)
                     .foregroundColor(.white)
                     .cornerRadius(8)
-                    .padding(.top)
-
-                    Spacer()
+                    .padding()
+                    
+                } else {
+                    totalBudgetView
+                        .padding(.vertical, 8)
+                    if !viewModel.entries.isEmpty {
+                        List {
+                            ForEach($viewModel.entries){ $entry in
+                                NavigationLink(destination: BudgetEntryDetailView(viewModel: viewModel, entry: $entry)) {
+                                    HStack {
+                                        Image(systemName: entry.type.systemImage.lowercased())
+                                            .foregroundColor(.accentColor)
+                                        Text(entry.type.title)
+                                        Spacer()
+                                        Text("$\(entry.amount, specifier: "%.2f")")
+                                    }
+                                }}
+                            .onDelete(perform: viewModel.removeEntry)
+                        }
+                        .background(
+                            Color(.systemGray6)
+                                .cornerRadius(8)
+                        )
+                        .scrollContentBackground(.hidden)
+                    } else {
+                        Button {
+                            showingAddEntry = true
+                        } label: {
+                            Text("Add individual entries")
+                                .font(.headline)
+                        }
+                        .frame(height: 64)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.accentColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .padding(.top, 8)
+                        
+                        Spacer()
+                    }
                 }
             }
             .padding()
@@ -98,6 +116,7 @@ struct MainContentView: View {
     
     private var totalBudgetView: some View {
         ZStack {
+            
             CardView {
                 isShowingCardDetails = true
             } content: {
@@ -126,9 +145,6 @@ struct MainContentView: View {
                 }
             }
             .frame(maxHeight: 144)
-        }
-        .onAppear {
-            isShowingCardDetails = viewModel.totalBudget <= 0
         }
     }
 }
