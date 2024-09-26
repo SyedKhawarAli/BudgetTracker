@@ -2,7 +2,7 @@
 //  Utils.swift
 //  BudgetTracker
 //
-//  Created by Khawar Ali on 25.9.2024.
+//  Created by shah on 25.9.2024.
 //
 
 import Foundation
@@ -16,3 +16,4 @@ class Utils {
         return "\(version) (\(build))"
     }
 }
+

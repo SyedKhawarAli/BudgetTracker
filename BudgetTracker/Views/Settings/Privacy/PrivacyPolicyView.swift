@@ -2,7 +2,7 @@
 //  PrivacyPolicyView.swift
 //  BudgetTracker
 //
-//  Created by Khawar Ali on 25.9.2024.
+//  Created by shah on 25.9.2024.
 //
 
 import SwiftUI
@@ -16,8 +16,8 @@ struct PrivacyPolicyView: View {
             
             ScrollView {
                 Text("Your privacy is important to us. This policy explains how we handle your data.")
+                    .font(.body)
                     .padding()
-                // Add the rest of your privacy policy here
             }
             .padding()
             
