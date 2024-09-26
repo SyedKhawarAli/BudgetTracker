@@ -48,12 +48,11 @@ struct TotalBudgetDetailView: View {
                     }
                 }
             }
-            .cornerRadius(16)
+            .cornerRadius(8)
             Spacer()
         }
         .navigationTitle("Total Budget")
         .navigationBarTitleDisplayMode(.inline)
-        .padding()
         .navigationBarBackButtonHidden(viewModel.totalBudget <= 0)
         .errorAlert(error: $viewModel.error)
     }

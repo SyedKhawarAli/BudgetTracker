@@ -17,7 +17,7 @@ struct MainContentView: View {
         NavigationStack {
             VStack {
                 totalBudgetView
-                    .padding(.all, 8)
+                    .padding(.vertical, 8)
                 if !viewModel.entries.isEmpty {
                     List {
                         ForEach($viewModel.entries){ $entry in
@@ -34,7 +34,7 @@ struct MainContentView: View {
                     }
                     .background(
                         Color(.systemGray6)
-                            .cornerRadius(16)
+                            .cornerRadius(8)
                     )
                     .scrollContentBackground(.hidden)
                 } else {

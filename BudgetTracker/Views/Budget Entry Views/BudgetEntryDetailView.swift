@@ -30,10 +30,9 @@ struct BudgetEntryDetailView: View {
                     }
                 }
             }
-            .cornerRadius(16)
+            .cornerRadius(8)
             Spacer()
         }
-        .padding()
         .navigationTitle(entry.type.title)
         .toolbar {
             Button("Edit") {

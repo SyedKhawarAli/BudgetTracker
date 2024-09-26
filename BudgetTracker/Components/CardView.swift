@@ -19,7 +19,7 @@ struct CardView<Content: View>: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 15)
+            RoundedRectangle(cornerRadius: 8)
                 .fill(isPressed ? Color(.systemGray5) : Color(.systemGray6))
                 .shadow(color: Color.black.opacity(isPressed ? 0 : 0.2), radius: 5, x: 0, y: 5)
                 .scaleEffect(isPressed ? 0.99 : 1.0)
