@@ -25,6 +25,9 @@
     "Cancel" : {
 
     },
+    "Current total budget" : {
+
+    },
     "Description" : {
 
     },
@@ -32,9 +35,6 @@
 
     },
     "Edit Entry" : {
-
-    },
-    "Entry Details" : {
 
     },
     "Icon (SFSymbol)" : {
@@ -49,7 +49,7 @@
     "Maximum of 15 types reached" : {
 
     },
-    "New indiviual budget" : {
+    "New individual budget" : {
 
     },
     "Privacy" : {
@@ -58,7 +58,13 @@
     "Privacy Policy" : {
 
     },
+    "Remaining Budget" : {
+
+    },
     "Save" : {
+
+    },
+    "Set your total budget" : {
 
     },
     "Settings" : {
@@ -71,6 +77,9 @@
 
     },
     "Type" : {
+
+    },
+    "Update your total budget" : {
 
     },
     "Version" : {

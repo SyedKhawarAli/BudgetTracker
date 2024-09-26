@@ -12,7 +12,8 @@ struct MainContentView: View {
     @ObservedObject var viewModel = BudgetTrackerViewModel()
     @State private var showingAddEntry = false
     @State private var isShowingSettings = false
-    
+    @State private var isShowingCardDetails = false
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -23,7 +24,7 @@ struct MainContentView: View {
                         ForEach($viewModel.entries){ $entry in
                             NavigationLink(destination: BudgetEntryDetailView(viewModel: viewModel, entry: $entry)) {
                                 HStack {
-                                    Image(systemName: entry.type.systemImage)
+                                    Image(systemName: entry.type.systemImage.lowercased())
                                         .foregroundColor(.blue)
                                     Text(entry.type.title)
                                     Spacer()
@@ -64,32 +65,44 @@ struct MainContentView: View {
             .navigationDestination(isPresented: $isShowingSettings) {
                 SettingsView(viewModel: viewModel)
             }
-
+            .navigationDestination(isPresented: $isShowingCardDetails) {
+                TotalBudgetDetailView(viewModel: viewModel)
+            }
         }
     }
     
     private var totalBudgetView: some View {
         ZStack {
             CardView {
-                
+                isShowingCardDetails = true
             } content: {
                 HStack {
                     VStack (alignment: .leading, spacing: 8){
-                        Text("Total Budget")
-                            .font(.body)
-                        Text("$\(viewModel.totalAmount, specifier: "%.2f")")
+                        Text("Remaining Budget")
+                            .font(.caption)
+                        Text("$\(viewModel.totalBudget - viewModel.totalAmount, specifier: "%.2f")")
                             .font(.title)
                         Spacer()
-                        ProgressView(value: 0.7)
+                        HStack {
+                            Text("Total Budget")
+                                .font(.caption)
+                            Spacer()
+                            Text("$\(viewModel.totalBudget, specifier: "%.2f")")
+                                .font(.caption)
+                        }
+                        ProgressView(value: (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget)
                             .scaleEffect(x: 1, y: 2, anchor: .center)
-
+                        
                     }
                     .padding(.all, 4)
                     Spacer()
                 }
             }
+            .frame(maxHeight: 144)
         }
-        .frame(maxHeight: 144)
+        .onAppear {
+            isShowingCardDetails = viewModel.totalBudget <= 0
+        }
     }
 }
 

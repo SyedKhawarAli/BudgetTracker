@@ -2,15 +2,15 @@
 //  AddBudgetTypeView.swift
 //  BudgetTracker
 //
-//  Created by Khawar Ali on 24.9.2024.
+//  Created by shah on 24.9.2024.
 //
 import SwiftUI
 
 struct AddBudgetTypeView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: BudgetTrackerViewModel
     @State private var title: String = ""
-    @State private var systemImage: String = "questionmark.circle"  // Default icon
-    @Environment(\.presentationMode) var presentationMode
+    @State private var systemImage: String = "questionmark.circle"
 
     var body: some View {
         NavigationView {
@@ -28,14 +28,15 @@ struct AddBudgetTypeView: View {
                 }
             }
             .navigationTitle("Add New Type")
-            .navigationBarItems(trailing: Button("Save") {
-                if !title.isEmpty {
-                    let newType = BudgetType(title: title, systemImage: systemImage)
-                    if viewModel.addType(newType) {
-                        presentationMode.wrappedValue.dismiss()
-                    }
+            .toolbarTitleDisplayMode(.inline)
+            .navigationBarItems(leading: Button("Cancel") {
+                presentationMode.wrappedValue.dismiss()
+            },trailing: Button("Save") {
+                if viewModel.addBudgetType(title: title, systemImage: systemImage.lowercased()) {
+                    presentationMode.wrappedValue.dismiss()
                 }
-            })
+            }.disabled(title.isEmpty))
+            .errorAlert(error: $viewModel.error)
         }
     }
 }

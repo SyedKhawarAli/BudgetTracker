@@ -2,7 +2,7 @@
 //  BudgetType.swift
 //  BudgetTracker
 //
-//  Created by Khawar Ali on 24.9.2024.
+//  Created by shah on 24.9.2024.
 //
 
 import SwiftUI

@@ -2,7 +2,7 @@
 //  ManageTypesView.swift
 //  BudgetTracker
 //
-//  Created by Khawar Ali on 25.9.2024.
+//  Created by shah on 25.9.2024.
 //
 
 import SwiftUI
@@ -15,7 +15,7 @@ struct ManageTypesView: View {
         List {
             ForEach(viewModel.availableTypes) { type in
                 HStack {
-                    Image(systemName: type.systemImage)
+                    Image(systemName: type.systemImage.lowercased())
                     Text(type.title)
                 }
             }
@@ -41,6 +41,5 @@ struct ManageTypesView: View {
 
     private func deleteType(at offsets: IndexSet) {
         viewModel.availableTypes.remove(atOffsets: offsets)
-        viewModel.saveBudgetTypes()
     }
 }
