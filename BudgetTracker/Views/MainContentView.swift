@@ -39,6 +39,18 @@ struct MainContentView: View {
                     )
                     .scrollContentBackground(.hidden)
                 } else {
+                    Button {
+                        showingAddEntry = true
+                    } label: {
+                        Text("Add individual entries")
+                            .font(.headline)
+                            .padding()
+                    }
+                    .background(Color.accentColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    .padding(.top)
+
                     Spacer()
                 }
             }
@@ -53,9 +65,11 @@ struct MainContentView: View {
                         Image(systemName: "gear")
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add") {
-                        showingAddEntry = true
+                if !viewModel.entries.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Add") {
+                            showingAddEntry = true
+                        }
                     }
                 }
             }
@@ -78,7 +92,7 @@ struct MainContentView: View {
             } content: {
                 HStack {
                     VStack (alignment: .leading, spacing: 8){
-                        Text("Remaining Budget")
+                        Text("Remaining")
                             .font(.caption)
                         Text("$\(viewModel.totalBudget - viewModel.totalAmount, specifier: "%.2f")")
                             .font(.title)
