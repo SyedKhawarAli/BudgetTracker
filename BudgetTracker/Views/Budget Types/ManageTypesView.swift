@@ -29,7 +29,7 @@ struct ManageTypesView: View {
                     AddBudgetTypeView(viewModel: viewModel)
                 }
             } else {
-                Text("Maximum of 15 types reached")
+                Text("Maximum of \(viewModel.maxTypes) types reached")
                     .foregroundColor(.red)
             }
         }

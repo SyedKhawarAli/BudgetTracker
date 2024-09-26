@@ -1,10 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "+50" : {
+
+    },
     "$%.2f" : {
 
     },
     "Add" : {
+
+    },
+    "Add individual budget" : {
 
     },
     "Add New Type" : {
@@ -28,6 +34,9 @@
     "Current total budget" : {
 
     },
+    "delete some types to add more" : {
+
+    },
     "Description" : {
 
     },
@@ -46,10 +55,13 @@
     "Manage Types" : {
 
     },
-    "Maximum of 15 types reached" : {
+    "Maximum of %lld types reached" : {
 
     },
-    "New individual budget" : {
+    "No unused types available. Please add a new type" : {
+
+    },
+    "Note: Minimum budget required: $%.2f" : {
 
     },
     "Privacy" : {
@@ -59,6 +71,9 @@
 
     },
     "Remaining Budget" : {
+
+    },
+    "Remaining:" : {
 
     },
     "Save" : {

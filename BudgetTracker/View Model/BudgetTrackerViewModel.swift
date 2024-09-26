@@ -17,7 +17,7 @@ class BudgetTrackerViewModel: ObservableObject {
     
     // MARK: Variables
     
-    private let maxTypes = 15
+    let maxTypes = 15
     @Published var error: Swift.Error?
     @Published var entries: [BudgetEntry] = [] {
         didSet {
@@ -59,6 +59,10 @@ extension BudgetTrackerViewModel {
     func addEntry(amountText: String, descriptionText: String, selectedType: BudgetType?, completion: (() -> Void)?) {
         guard let amount = Double(amountText), amount > 0 else {
             error = Error.invalidAmount
+            return
+        }
+        guard (totalAmount + amount) <= totalBudget else {
+            error = Error.outOfBudget
             return
         }
         guard descriptionText.count <= Constants.maxDescriptionLength else {
@@ -178,6 +182,10 @@ extension BudgetTrackerViewModel {
             error = Error.invalidAmount
             return
         }
+        guard totalAmount < amount else {
+            error = Error.budgetIsTooLow
+            return
+        }
         totalBudget = amount
         completion?()
     }
@@ -188,6 +196,8 @@ extension BudgetTrackerViewModel {
 extension BudgetTrackerViewModel {
     enum Error: LocalizedError {
         case invalidAmount
+        case outOfBudget
+        case budgetIsTooLow
         case budgetDescriptionTooLong
         case budgetTypeNotFound
         case budgetTypeTitleTooLong
@@ -197,6 +207,10 @@ extension BudgetTrackerViewModel {
             switch self {
             case .invalidAmount:
                 return "Invalid Amount"
+            case .outOfBudget:
+                return "Out of Budget"
+            case .budgetIsTooLow:
+                return "Budget is too low"
             case .budgetTypeNotFound:
                 return "Budget Type Not Found"
             case .budgetTypeTitleTooLong:
@@ -212,6 +226,10 @@ extension BudgetTrackerViewModel {
             switch self {
             case .invalidAmount:
                 return "Amount should be number and greater than zero"
+            case .outOfBudget:
+                return "Amount should be with in budget"
+            case .budgetIsTooLow:
+                return "More budget is needed or reduce individual budgets"
             case .budgetTypeNotFound:
                 return "select a budget type"
             case .budgetTypeTitleTooLong:
