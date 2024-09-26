@@ -22,12 +22,12 @@ struct CardView<Content: View>: View {
             RoundedRectangle(cornerRadius: 15)
                 .fill(isPressed ? Color(.systemGray5) : Color(.systemGray6))
                 .shadow(color: Color.black.opacity(isPressed ? 0 : 0.2), radius: 5, x: 0, y: 5)
-                .scaleEffect(isPressed ? 0.97 : 1.0)
+                .scaleEffect(isPressed ? 0.99 : 1.0)
                 .animation(.easeInOut(duration: 0.2), value: isPressed)
 
             content
                 .padding()
-                .scaleEffect(isPressed ? 0.95 : 1.0)
+                .scaleEffect(isPressed ? 0.99 : 1.0)
                 .animation(.easeInOut(duration: 0.2), value: isPressed)
         }
         .onTapGesture {

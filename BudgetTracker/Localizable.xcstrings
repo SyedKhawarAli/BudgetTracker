@@ -1,0 +1,84 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "$%.2f" : {
+
+    },
+    "Add" : {
+
+    },
+    "Add New Type" : {
+
+    },
+    "Amount" : {
+
+    },
+    "App Information" : {
+
+    },
+    "Budget Tracker" : {
+
+    },
+    "Budget Types" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Description" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Edit Entry" : {
+
+    },
+    "Entry Details" : {
+
+    },
+    "Icon (SFSymbol)" : {
+
+    },
+    "Manage Budget Types" : {
+
+    },
+    "Manage Types" : {
+
+    },
+    "Maximum of 15 types reached" : {
+
+    },
+    "New indiviual budget" : {
+
+    },
+    "Privacy" : {
+
+    },
+    "Privacy Policy" : {
+
+    },
+    "Save" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Title" : {
+
+    },
+    "Total Budget" : {
+
+    },
+    "Type" : {
+
+    },
+    "Version" : {
+
+    },
+    "Your privacy is important to us. This policy explains how we handle your data." : {
+
+    }
+  },
+  "version" : "1.0"
+}
