@@ -90,13 +90,17 @@ struct AddEntryView: View {
                 }
             } else {
                 if viewModel.availableTypes.count < 15 {
-                    Text("No unused types available. Please add a new type")
-                        .foregroundStyle(.secondary)
-                    Button("Add New Type") {
-                        showingAddType = true
-                    }
-                    .sheet(isPresented: $showingAddType) {
-                        AddBudgetTypeView(viewModel: viewModel)
+                    VStack {
+                        Text("No unused types available. Please add a new type")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                        Button("Add New Type") {
+                            showingAddType = true
+                        }
+                        .padding(8)
+                        .sheet(isPresented: $showingAddType) {
+                            AddBudgetTypeView(viewModel: viewModel)
+                        }
                     }
                 } else {
                     Text("Maximum of \(viewModel.maxTypes) types reached")
