@@ -8,7 +8,8 @@ import SwiftUI
 
 struct AddBudgetTypeView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var viewModel: BudgetTrackerViewModel
+    @EnvironmentObject var budgetTypeHandler: BudgetTypeHandler
+    @ObservedObject var viewModel: BudgetTypeViewModel
     @State private var title: String = ""
     @State private var systemImage: String = "questionmark.circle"
 
@@ -32,8 +33,11 @@ struct AddBudgetTypeView: View {
             .navigationBarItems(leading: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             },trailing: Button("Save") {
-                if viewModel.addBudgetType(title: title, systemImage: systemImage.lowercased()) {
-                    presentationMode.wrappedValue.dismiss()
+                if viewModel.verifyBudgetTypeTitle(title) &&
+                    viewModel.verifyBudgetTypeDoesNotExist(title, budgetTypeHandler.availableTypes) {
+                    if budgetTypeHandler.addBudgetType(title: title, systemImage: systemImage.lowercased()) {
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }.disabled(title.isEmpty))
             .errorAlert(error: $viewModel.error)

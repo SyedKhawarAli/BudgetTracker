@@ -12,6 +12,8 @@ struct BudgetTrackerApp: App {
     var body: some Scene {
         WindowGroup {
             MainContentView()
+                .environmentObject(ThemeHandler())
+                .environmentObject(BudgetTypeHandler())
         }
     }
 }

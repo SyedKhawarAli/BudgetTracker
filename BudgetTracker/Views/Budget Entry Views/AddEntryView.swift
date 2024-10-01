@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddEntryView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var budgetTypeHandler: BudgetTypeHandler
     @ObservedObject var viewModel: BudgetTrackerViewModel
     @State private var amountText: String = ""
     @State private var descriptionText: String = ""
@@ -78,10 +79,10 @@ struct AddEntryView: View {
     
     private var budgetTypePickerView: some View {
         ZStack {
-            if viewModel.unusedTypes.count > 0 {
+            if  budgetTypeHandler.unusedTypes(entries: viewModel.entries).count > 0 {
                 Picker("Type", selection: $selectedType) {
                     Text("Select a Type").tag(BudgetType?.none)
-                    ForEach(viewModel.unusedTypes) { type in
+                    ForEach(budgetTypeHandler.unusedTypes(entries: viewModel.entries)) { type in
                         HStack {
                             Image(systemName: type.systemImage.lowercased())
                             Text(type.title)
@@ -89,7 +90,7 @@ struct AddEntryView: View {
                     }
                 }
             } else {
-                if viewModel.availableTypes.count < 15 {
+                if budgetTypeHandler.availableTypes.count < 15 {
                     VStack {
                         Text("No unused types available. Please add a new type")
                             .foregroundStyle(.secondary)
@@ -99,11 +100,11 @@ struct AddEntryView: View {
                         }
                         .padding(8)
                         .sheet(isPresented: $showingAddType) {
-                            AddBudgetTypeView(viewModel: viewModel)
+                            AddBudgetTypeView(viewModel: BudgetTypeViewModel())
                         }
                     }
                 } else {
-                    Text("Maximum of \(viewModel.maxTypes) types reached")
+                    Text("Maximum of \(Constants.maxBudgetTypes) types reached")
                         .foregroundColor(.red)
                     Text("delete some types to add more")
                         .foregroundStyle(.secondary)

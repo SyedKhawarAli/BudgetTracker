@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var themeHandler: ThemeHandler
     @ObservedObject var viewModel: BudgetTrackerViewModel
     @State private var showingPrivacyPolicy = false
     @State private var navigationPath = NavigationPath()
@@ -27,14 +28,14 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Appearance")) {
-                    Picker("Theme", selection: $viewModel.appTheme) {
+                    Picker("Theme", selection: $themeHandler.appTheme) {
                         ForEach(Theme.allCases) { theme in
                             Text(theme.rawValue).tag(theme)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
-                    .onChange(of: viewModel.appTheme, { oldValue, newValue in
-                        viewModel.appTheme = newValue
+                    .onChange(of: themeHandler.appTheme, { oldValue, newValue in
+                        themeHandler.appTheme = newValue
                     })
                 }
                 
@@ -65,7 +66,7 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .navigationDestination(for: String.self) { destination in
                 if destination == "ManageTypesView" {
-                    ManageTypesView(viewModel: viewModel)
+                    ManageTypesView(viewModel: BudgetTypeViewModel())
                 }
             }
         }

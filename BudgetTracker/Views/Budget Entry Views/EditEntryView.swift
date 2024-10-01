@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EditEntryView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var budgetTypeHandler: BudgetTypeHandler
     @ObservedObject var viewModel: BudgetTrackerViewModel
     @Binding var entry: BudgetEntry
     
@@ -36,7 +37,7 @@ struct EditEntryView: View {
                             Image(systemName: entry.type.systemImage)
                             Text(entry.type.title)
                         }.tag(entry.type as BudgetType?)
-                        ForEach(viewModel.unusedTypes) { type in
+                        ForEach(budgetTypeHandler.unusedTypes(entries: viewModel.entries)) { type in
                             HStack {
                                 Image(systemName: type.systemImage)
                                 Text(type.title)
@@ -51,6 +52,9 @@ struct EditEntryView: View {
             .navigationBarItems(leading: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             }, trailing: Button("Save") {
+                if let index = viewModel.entries.firstIndex(where: {$0.id == entry.id}) {
+                    viewModel.entries[index].amount = 0
+                }
                 viewModel.updateEntry(entry: entry, amountText: amountText, descriptionText: descriptionText, selectedType: selectedType){
                     presentationMode.wrappedValue.dismiss()
                 }

@@ -9,16 +9,8 @@ import Foundation
 import SwiftUI
 
 class BudgetTrackerViewModel: ObservableObject {
-    private struct BudgetKeys {
-        static let budgetEntries = "budgetEntries"
-        static let budgetTypes = "budgetTypes"
-        static let totalBudget = "totalBudget"
-        static let appTheme = "appTheme"
-    }
-    
     // MARK: Variables
     
-    let maxTypes = 15
     @Published var error: Swift.Error?
     @Published var entries: [BudgetEntry] = [] {
         didSet {
@@ -30,31 +22,17 @@ class BudgetTrackerViewModel: ObservableObject {
             saveTotalBudget()
         }
     }
-    @Published var availableTypes: [BudgetType] = []{
-        didSet {
-            saveBudgetTypes()
-        }
-    }
-    @Published var appTheme: Theme = .light {
-        didSet {
-            saveAppTheme(appTheme)
-        }
-    }
-    var unusedTypes: [BudgetType] {
-        let usedTypes = entries.map { $0.type }
-        return availableTypes.filter { !usedTypes.contains($0) }
-    }
+    
     var totalAmount: Double {
         entries.reduce(0) { $0 + $1.amount }
     }
+    var budgetDatastore = BudgetDatastore.shared
     
     // MARK: Methods
     
     init() {
         loadEntries()
-        loadBudgetTypes()
         loadTotalBudget()
-        loadAppTheme()
     }
 }
 
@@ -108,63 +86,11 @@ extension BudgetTrackerViewModel {
     // MARK: Private methods
     
     private func saveEntries() {
-        if let encoded = try? JSONEncoder().encode(entries) {
-            UserDefaults.standard.set(encoded, forKey: BudgetKeys.budgetEntries)
-        }
+        budgetDatastore.saveArrayData(dataArray: entries, key: BudgetKeys.budgetEntries)
     }
     
     private func loadEntries() {
-        if let savedData = UserDefaults.standard.data(forKey: BudgetKeys.budgetEntries),
-           let decoded = try? JSONDecoder().decode([BudgetEntry].self, from: savedData) {
-            entries = decoded
-        }
-    }
-}
-
-// MARK: - BudgetTypes
-
-extension BudgetTrackerViewModel {
-    // MARK: Private methods
-    
-    private func saveBudgetTypes() {
-        if let encoded = try? JSONEncoder().encode(availableTypes) {
-            UserDefaults.standard.set(encoded, forKey: BudgetKeys.budgetTypes)
-        }
-    }
-    
-    private func loadBudgetTypes() {
-        if let savedData = UserDefaults.standard.data(forKey: BudgetKeys.budgetTypes),
-           let decoded = try? JSONDecoder().decode([BudgetType].self, from: savedData) {
-            availableTypes = decoded
-        }
-        if availableTypes.isEmpty {
-            availableTypes = [
-                BudgetType(title: "Groceries", systemImage: "cart.fill"),
-                BudgetType(title: "Shopping", systemImage: "bag.fill"),
-                BudgetType(title: "Traveling", systemImage: "airplane"),
-                BudgetType(title: "Entertainment", systemImage: "film"),
-                BudgetType(title: "Miscellaneous", systemImage: "list.bullet.rectangle.fill")
-            ]
-        }
-    }
-    
-    // MARK: Public methods
-    
-    func addBudgetType(title: String, systemImage: String) -> Bool {
-        guard title.count < Constants.maxBudgetTypeTitleLength else {
-            error = Error.budgetTypeTitleTooLong
-            return false
-        }
-        guard availableTypes.contains(where: { $0.title == title }) == false else {
-            error = Error.budgetTypeAlreadyExists
-            return false
-        }
-        let type = BudgetType(title: title, systemImage: systemImage)
-        if availableTypes.count < maxTypes {
-            availableTypes.append(type)
-            return true
-        }
-        return false
+        entries = budgetDatastore.loadArrayData(key: BudgetKeys.budgetEntries)
     }
 }
 
@@ -188,24 +114,12 @@ extension BudgetTrackerViewModel {
             error = Error.invalidAmount
             return
         }
-        guard totalAmount < amount else {
+        guard totalAmount <= amount else {
             error = Error.budgetIsTooLow
             return
         }
         totalBudget = amount
         completion?()
-    }
-}
-
-// MARK: - Theme setup
-
-extension BudgetTrackerViewModel {
-    func saveAppTheme(_ theme: Theme) {
-        UserDefaults.standard.set(theme.rawValue, forKey: BudgetKeys.appTheme)
-    }
-    
-    func loadAppTheme() {
-        appTheme = Theme(rawValue: UserDefaults.standard.string(forKey: BudgetKeys.appTheme) ?? Theme.system.rawValue) ?? .system
     }
 }
 
@@ -217,9 +131,6 @@ extension BudgetTrackerViewModel {
         case outOfBudget
         case budgetIsTooLow
         case budgetDescriptionTooLong
-        case budgetTypeNotFound
-        case budgetTypeTitleTooLong
-        case budgetTypeAlreadyExists
         
         var errorDescription: String? {
             switch self {
@@ -229,14 +140,8 @@ extension BudgetTrackerViewModel {
                 return "Out of Budget"
             case .budgetIsTooLow:
                 return "Budget is too low"
-            case .budgetTypeNotFound:
-                return "Budget Type Not Found"
-            case .budgetTypeTitleTooLong:
-                return "Budget Type Title Too Long"
             case .budgetDescriptionTooLong:
                 return "Budget Description Too Long"
-            case .budgetTypeAlreadyExists:
-                return "Budget Type Already Exists"
             }
         }
         
@@ -248,14 +153,8 @@ extension BudgetTrackerViewModel {
                 return "Amount should be with in budget"
             case .budgetIsTooLow:
                 return "More budget is needed or reduce individual budgets"
-            case .budgetTypeNotFound:
-                return "select a budget type"
-            case .budgetTypeTitleTooLong:
-                return "Budget Type Title should be less than \(Constants.maxBudgetTypeTitleLength) characters"
             case .budgetDescriptionTooLong:
                 return "Budget Description should be less than \(Constants.maxDescriptionLength) characters"
-            case .budgetTypeAlreadyExists:
-                return  "Budget type with same title already exists"
             }
         }
     }

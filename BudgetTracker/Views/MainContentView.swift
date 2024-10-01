@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainContentView: View {
+    @EnvironmentObject var themeHandler: ThemeHandler
     @ObservedObject var viewModel = BudgetTrackerViewModel()
     @State private var showingAddEntry = false
     @State private var isShowingSettings = false
@@ -103,7 +104,7 @@ struct MainContentView: View {
         }
         
         var colorScheme: ColorScheme? {
-            switch viewModel.appTheme {
+            switch themeHandler.appTheme {
             case .light:
                 return .light
             case .dark:

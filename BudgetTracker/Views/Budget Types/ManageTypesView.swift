@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct ManageTypesView: View {
-    @ObservedObject var viewModel: BudgetTrackerViewModel
+    @EnvironmentObject var budgetTypeHandler: BudgetTypeHandler
+    @ObservedObject var viewModel: BudgetTypeViewModel
     @State private var showingAddType = false
     
     var body: some View {
         List {
-            ForEach(viewModel.availableTypes) { type in
+            ForEach(budgetTypeHandler.availableTypes) { type in
                 HStack {
                     Image(systemName: type.systemImage.lowercased())
                     Text(type.title)
@@ -21,7 +22,7 @@ struct ManageTypesView: View {
             }
             .onDelete(perform: deleteType)
             
-            if viewModel.availableTypes.count < 15 {
+            if budgetTypeHandler.availableTypes.count < 15 {
                 Button("Add New Type") {
                     showingAddType = true
                 }
@@ -29,7 +30,7 @@ struct ManageTypesView: View {
                     AddBudgetTypeView(viewModel: viewModel)
                 }
             } else {
-                Text("Maximum of \(viewModel.maxTypes) types reached")
+                Text("Maximum of \(Constants.maxBudgetTypes) types reached")
                     .foregroundColor(.red)
             }
         }
@@ -40,6 +41,6 @@ struct ManageTypesView: View {
     }
 
     private func deleteType(at offsets: IndexSet) {
-        viewModel.availableTypes.remove(atOffsets: offsets)
+        budgetTypeHandler.availableTypes.remove(atOffsets: offsets)
     }
 }
