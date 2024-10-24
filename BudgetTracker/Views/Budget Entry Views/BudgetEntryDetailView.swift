@@ -26,7 +26,7 @@ struct BudgetEntryDetailView: View {
                         Text("Amount")
                             .font(.headline)
                         Spacer()
-                        Text("$\(entry.amount, specifier: "%.2f")")
+                        Text(Utils.getStringFromDecimal(entry.amount))
                     }
                 }
             }

@@ -17,7 +17,7 @@ struct TotalBudgetDetailView: View {
             List {
                 if viewModel.totalBudget > 0 {
                     Section(header: Text("Current total budget")) {
-                        Text("$\(viewModel.totalBudget, specifier: "%.2f")")
+                        Text(Utils.getStringFromDecimal(viewModel.totalBudget))
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -42,7 +42,7 @@ struct TotalBudgetDetailView: View {
                             .cornerRadius(4)
                         }
                         if viewModel.totalAmount > 0 {
-                            Text("Note: Minimum budget required: $\(viewModel.totalAmount, specifier: "%.2f")")
+                            Text("Note: Minimum budget required: \(Utils.getStringFromDecimal(viewModel.totalAmount))")
                                 .font(.footnote)
                         }
                     }

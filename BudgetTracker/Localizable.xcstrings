@@ -4,9 +4,6 @@
     "+50" : {
 
     },
-    "$%.2f" : {
-
-    },
     "Add" : {
 
     },
@@ -67,7 +64,7 @@
     "No unused types available. Please add a new type" : {
 
     },
-    "Note: Minimum budget required: $%.2f" : {
+    "Note: Minimum budget required: %@" : {
 
     },
     "Privacy" : {

@@ -51,19 +51,19 @@ struct AddEntryView: View {
                 HStack {
                     Text("Remaining:")
                         .font(.caption)
-                    Text("$\(viewModel.totalBudget - viewModel.totalAmount, specifier: "%.2f")")
+                    Text(Utils.getStringFromDecimal(viewModel.totalBudget - viewModel.totalAmount))
                         .font(.caption)
                     Spacer()
-                    Text("$\(viewModel.totalBudget, specifier: "%.2f")")
+                    Text(Utils.getStringFromDecimal(viewModel.totalBudget))
                         .font(.caption)
                 }
-                ProgressView(value: (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget)
+                ProgressView(value: NSDecimalNumber(decimal: (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget).doubleValue)
                     .scaleEffect(x: 1, y: 2, anchor: .center)
             }
             .padding()
             .background(Color(UIColor.systemBackground))
             .cornerRadius(8)
-            if ((Double(amountText) ?? 0) + viewModel.totalAmount) > viewModel.totalBudget {
+            if ((Utils.decimal(with: amountText) ?? 0) + viewModel.totalAmount) > viewModel.totalBudget {
                 Button {
                     viewModel.totalBudget += 50
                 } label: {

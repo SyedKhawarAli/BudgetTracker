@@ -9,7 +9,7 @@ import Foundation
 
 struct BudgetEntry: Identifiable, Codable, Equatable {
     var id = UUID()
-    var amount: Double
+    var amount: Decimal
     var description: String
     var type: BudgetType 
     

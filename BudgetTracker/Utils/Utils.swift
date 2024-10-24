@@ -15,5 +15,19 @@ class Utils {
         }
         return "\(version) (\(build))"
     }
+    
+    public static func getCurrencyFormatter() -> NumberFormatter {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.generatesDecimalNumbers = true
+        return numberFormatter
+    }
+    
+    public static func getStringFromDecimal(_ number: Decimal) -> String {
+        Utils.getCurrencyFormatter().string(from: number as NSDecimalNumber) ?? ""
+    }
+    
+    public static func decimal(with string: String) -> Decimal? {
+        return Decimal(string: string, locale: .current)
+    }
 }
-

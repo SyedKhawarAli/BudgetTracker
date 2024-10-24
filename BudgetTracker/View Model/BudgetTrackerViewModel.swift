@@ -17,13 +17,13 @@ class BudgetTrackerViewModel: ObservableObject {
             saveEntries()
         }
     }
-    @Published var totalBudget: Double = 0 {
+    @Published var totalBudget: Decimal = 0 {
         didSet {
             saveTotalBudget()
         }
     }
     
-    var totalAmount: Double {
+    var totalAmount: Decimal {
         entries.reduce(0) { $0 + $1.amount }
     }
     var budgetDatastore = BudgetDatastore.shared
@@ -42,7 +42,7 @@ extension BudgetTrackerViewModel {
     // MARK: Public methods
     
     private func validateEntryFields(amountText: String, descriptionText: String, selectedType: BudgetType?) -> BudgetEntry? {
-        guard let amount = Double(amountText), amount > 0 else {
+        guard let amount = Utils.decimal(with: amountText), amount > 0 else {
             error = Error.invalidAmount
             return nil
         }
@@ -100,17 +100,19 @@ extension BudgetTrackerViewModel {
     // MARK: Private methods
     
     private func saveTotalBudget() {
-        UserDefaults.standard.set(totalBudget, forKey: BudgetKeys.totalBudget)
+        let str = String(describing: totalBudget)
+        UserDefaults.standard.set(str, forKey: BudgetKeys.totalBudget)
     }
     
     private func loadTotalBudget() {
-        totalBudget = UserDefaults.standard.double(forKey: BudgetKeys.totalBudget)
+        let totalBudgetString = UserDefaults.standard.string(forKey: BudgetKeys.totalBudget) ?? "0"
+        totalBudget = Decimal(string: totalBudgetString) ?? 0
     }
     
     // MARK: Public methods
     
     func saveTotalBudget(amountText: String, completion: (() -> Void)?) {
-        guard let amount = Double(amountText), amount > 0 else {
+        guard let amount = Utils.decimal(with: amountText), amount > 0 else {
             error = Error.invalidAmount
             return
         }

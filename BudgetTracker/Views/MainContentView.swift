@@ -44,7 +44,7 @@ struct MainContentView: View {
                                             .foregroundColor(.accentColor)
                                         Text(entry.type.title)
                                         Spacer()
-                                        Text("$\(entry.amount, specifier: "%.2f")")
+                                        Text(Utils.getStringFromDecimal(entry.amount))
                                     }
                                 }}
                             .onDelete(perform: viewModel.removeEntry)
@@ -125,21 +125,20 @@ struct MainContentView: View {
                     VStack (alignment: .leading, spacing: 8){
                         Text("Remaining")
                             .font(.caption)
-                        Text("$\(viewModel.totalBudget - viewModel.totalAmount, specifier: "%.2f")")
+                        Text(Utils.getStringFromDecimal(viewModel.totalBudget - viewModel.totalAmount))
                             .font(.title)
                         Spacer()
                         HStack {
                             Text("Total Budget")
                                 .font(.caption)
                             Spacer()
-                            Text("$\(viewModel.totalBudget, specifier: "%.2f")")
+                            Text(Utils.getStringFromDecimal(viewModel.totalBudget))
                                 .font(.caption)
                         }
                         if (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget > 0 {
-                            ProgressView(value: (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget)
+                            ProgressView(value: NSDecimalNumber(decimal: (viewModel.totalBudget - viewModel.totalAmount)/viewModel.totalBudget).doubleValue)
                                 .scaleEffect(x: 1, y: 2, anchor: .center)
                         }
-                        
                     }
                     .padding(.all, 4)
                     Spacer()

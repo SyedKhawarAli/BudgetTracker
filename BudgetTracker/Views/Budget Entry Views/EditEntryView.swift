@@ -17,8 +17,8 @@ struct EditEntryView: View {
     @State private var descriptionText: String = ""
     @State private var selectedType: BudgetType?
     
-    var totalAmountWithoutCurrentEntryAmount: Double {
-        return Double(viewModel.totalAmount - entry.amount)
+    var totalAmountWithoutCurrentEntryAmount: Decimal {
+        return viewModel.totalAmount - entry.amount
     }
 
     var body: some View {
@@ -60,7 +60,7 @@ struct EditEntryView: View {
                 }
             })
             .onAppear {
-                amountText = String(format: "%.2f", entry.amount)
+                amountText = String(describing: entry.amount)
                 descriptionText = entry.description
                 selectedType = entry.type
             }
@@ -74,19 +74,20 @@ struct EditEntryView: View {
                 HStack {
                     Text("Remaining:")
                         .font(.caption)
-                    Text("$\(viewModel.totalBudget - totalAmountWithoutCurrentEntryAmount , specifier: "%.2f")")
+                    Text(Utils.getStringFromDecimal(viewModel.totalBudget - totalAmountWithoutCurrentEntryAmount ))
                         .font(.caption)
                     Spacer()
-                    Text("$\(viewModel.totalBudget, specifier: "%.2f")")
+                    Text(Utils.getStringFromDecimal(viewModel.totalBudget))
                         .font(.caption)
                 }
-                ProgressView(value: (viewModel.totalBudget - totalAmountWithoutCurrentEntryAmount)/viewModel.totalBudget)
+                ProgressView(value: NSDecimalNumber(decimal: (viewModel.totalBudget - totalAmountWithoutCurrentEntryAmount)/viewModel.totalBudget).doubleValue)
                     .scaleEffect(x: 1, y: 2, anchor: .center)
+
             }
             .padding()
             .background(Color(UIColor.systemBackground))
             .cornerRadius(8)
-            if ((Double(amountText) ?? 0) + totalAmountWithoutCurrentEntryAmount) > viewModel.totalBudget {
+            if ((Utils.decimal(with: amountText) ?? 0) + totalAmountWithoutCurrentEntryAmount) > viewModel.totalBudget {
                 Button {
                     viewModel.totalBudget += 50
                 } label: {
